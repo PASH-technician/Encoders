@@ -1,21 +1,19 @@
-import ciphers.CaesarsCipher
+
+import ciphers.GronsfeldCipher
 import core.CipherBuilder
-//Шифр Гронсфельда
+
 fun main(args: Array<String>) {
     print("ШИФР ГРОНСФЕЛЬДА\n")
-    CipherBuilder(
-        ALPHABET,
-        CaesarsCipher.Factory()
-    )
-        .setText("Введите текст:") { readln() }
+    CipherBuilder(ALPHABET, GronsfeldCipher.Factory())
+        .setText("Введите слово:") { readln() }
         .setKey("Введите ключ:") { readln() }
         .build()
         .apply {
-            print("Зашифровать(з) или расшифровать(р):")
+            print("Зашифровать(e) или расшифровать(d):")
             println(
                 when (readln()) {
-                    "з" -> encode()
-                    "р" -> decode()
+                    "e" -> encode()
+                    "d" -> decode()
                     else -> ""
                 }
             )
