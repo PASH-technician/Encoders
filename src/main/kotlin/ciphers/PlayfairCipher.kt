@@ -4,16 +4,15 @@ import core.Cipher
 import core.CipherFactory
 
 class PlayfairCipher private constructor(
-    text: String,
+    private val text: String,
     key: String,
     private val alphabet: String
 ) : Cipher(text, key, alphabet) {
 
-    private val text = text
-        get() {
+    private fun getTransformedWord(word: String): String {
             var result = ""
-            field.forEachIndexed { index, c ->
-                result += if (index < field.length - 1 && field[index + 1] == c) c + "x"
+            word.forEachIndexed { index, c ->
+                result += if (index < word.length - 1 && word[index + 1] == c) c + "x"
                 else c
             }
             if (result.length % 2 == 1) result += "x"
@@ -53,9 +52,9 @@ class PlayfairCipher private constructor(
         throw NullPointerException("Нет такого символа:$c")
     }
 
-    private fun textOf2char(): List<String> {
+    private fun textOf2char(word: String): List<String> {
         val resultList = mutableListOf<String>()
-        this.text.forEachIndexed { index, c ->
+        word.forEachIndexed { index, c ->
             if (index % 2 == 0) {
                 resultList.add(c.toString())
             } else {
@@ -119,9 +118,9 @@ class PlayfairCipher private constructor(
         )
     }
 
-    private fun usingCipher(isEncode: Boolean): String{
+    private fun usingCipher(word: String, isEncode: Boolean): String{
         var resultEncode = ""
-        textOf2char().map { pair  ->
+        textOf2char(word).map { pair  ->
             val firstCoordinates = findingCoordinates(pair[0])
             val x1 = firstCoordinates[0]
             val y1 = firstCoordinates[1]
@@ -138,11 +137,15 @@ class PlayfairCipher private constructor(
     }
 
     override fun encode(): String {
-        return usingCipher(true)
+        return this.text.split(" ").joinToString(separator = " ") {
+            usingCipher(getTransformedWord(it), true)
+        }
     }
 
     override fun decode(): String {
-        return usingCipher(false)
+        return this.text.split(" ").joinToString(separator = " ") {
+            usingCipher(getTransformedWord(it), false)
+        }
     }
 
     class Factory : CipherFactory {

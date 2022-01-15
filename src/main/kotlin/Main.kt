@@ -20,7 +20,7 @@ fun main() {
                     else -> throw IllegalArgumentException()
                 }
             )
-                .setText("Введите слово:") { readln() }
+                .setText("Введите текст:") { readln() }
                 .setKey("Введите ключ:") { readln() }
                 .build()
                 .apply {

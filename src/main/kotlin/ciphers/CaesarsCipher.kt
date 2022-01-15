@@ -17,22 +17,26 @@ class CaesarsCipher private constructor(
         ]
     }
 
-    override fun encode(): String {
+    private fun usingCipher(word: String, isEncode: Boolean): String{
+        val k = if (isEncode) 1 else -1
         return String(
-            text.lowercase().map { c ->
-                val i = (alphabet.indexOf(c) + key.toInt()) % alphabet.length
+            word.lowercase().map { c ->
+                val i = (alphabet.indexOf(c) + k * key.toInt()) % alphabet.length
                 getCharFromAlphabet(i)
             }.toCharArray()
         )
     }
 
+    override fun encode(): String {
+        return text.split(" ").joinToString(separator = " ") {
+            usingCipher(it, true)
+        }
+    }
+
     override fun decode(): String {
-        return String(
-            text.lowercase().map { c ->
-                val i = (alphabet.indexOf(c) - key.toInt()) % alphabet.length
-                getCharFromAlphabet(i)
-            }.toCharArray()
-        )
+        return text.split(" ").joinToString(separator = " ") {
+            usingCipher(it, false)
+        }
     }
 
     class Factory() : CipherFactory {

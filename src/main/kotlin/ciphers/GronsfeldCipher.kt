@@ -17,22 +17,26 @@ class GronsfeldCipher private constructor(
         ]
     }
 
-    override fun encode(): String {
+    private fun usingCipher(word: String, isEncode: Boolean): String{
+        val k = if (isEncode) 1 else -1
         return String(
-            text.mapIndexed { index, c ->
-                val i = alphabet.indexOf(c) + key[index % key.length].digitToInt()
+            word.mapIndexed { index, c ->
+                val i = alphabet.indexOf(c) + k * key[index % key.length].digitToInt()
                 getCharFromAlphabet(i)
             }.toCharArray()
         )
     }
 
+    override fun encode(): String {
+        return text.split(" ").joinToString(separator = " ") {
+            usingCipher(it, true)
+        }
+    }
+
     override fun decode(): String {
-        return String(
-            text.mapIndexed { index, c ->
-                val i = alphabet.indexOf(c) - key[index % key.length].digitToInt()
-                getCharFromAlphabet(i)
-            }.toCharArray()
-        )
+        return text.split(" ").joinToString(separator = " ") {
+            usingCipher(it, false)
+        }
     }
 
     class Factory() : CipherFactory {
