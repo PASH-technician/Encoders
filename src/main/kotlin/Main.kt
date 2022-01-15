@@ -1,38 +1,40 @@
 import ciphers.CaesarsCipher
 import ciphers.GronsfeldCipher
+import ciphers.PlayfairCipher
 import core.CipherBuilder
 
-const val ALPHABET = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+const val ALPHABET = "abcdefghiklmnopqrstuvwxyz"
 
 fun main() {
-    var answer: String
     while (true) {
-        print("Как шифровать или расшифровывать(Шифр Цезаря(ц), Шифр Гронсфельда(г)):")
+        println("Алфавит: $ALPHABET")
+        print("Как шифровать или расшифровывать(Шифр Цезаря(c), Шифр Гронсфельда(g), Шифр Плейфейера(p):")
         val answer = readln().lowercase()
-        if (answer == "ц" || answer == "г")
+        if (answer == "c" || answer == "g" || answer == "p")
             CipherBuilder(
-                ALPHABET,
-                when (answer) {
-                    "ц" -> CaesarsCipher.Factory()
-                    "г" -> GronsfeldCipher.Factory()
+                alphabet =  ALPHABET,
+                cipherFactory =  when (answer) {
+                    "c" -> CaesarsCipher.Factory()
+                    "g" -> GronsfeldCipher.Factory()
+                    "p" -> PlayfairCipher.Factory()
                     else -> throw IllegalArgumentException()
                 }
             )
-                .setText("Введите текст:") { readln() }
+                .setText("Введите слово:") { readln() }
                 .setKey("Введите ключ:") { readln() }
                 .build()
                 .apply {
-                    print("Зашифровать(з) или расшифровать(р):")
+                    print("Зашифровать(e) или расшифровать(d):")
                     println(
                         when (readln()) {
-                            "з" -> encode()
-                            "р" -> decode()
+                            "e" -> encode()
+                            "d" -> decode()
                             else -> ""
                         }
                     )
                 }
 
-        print("Выйти(д):")
+        print("Выйти(y):")
         if (readln().lowercase() == "y") return
     }
 }
