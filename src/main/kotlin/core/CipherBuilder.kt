@@ -10,8 +10,8 @@ class CipherBuilder<T : CipherFactory>(
     fun setText(invitationText: String, getString: () -> String) = apply {
         while (true) {
             println(invitationText)
-            val resultText = getString()
-            val resultBadList = resultText.lowercase().filter { it !in alphabet }
+            val resultText = getString().lowercase()
+            val resultBadList = resultText.filter { it !in alphabet }
             if (resultBadList.isNotEmpty()) {
                 print("Этих символов нет в алфавите: ${resultBadList.toList()}\n")
             } else {
@@ -29,7 +29,7 @@ class CipherBuilder<T : CipherFactory>(
     fun setKey(invitationText: String, getString: () -> String) = apply {
         while (true) {
             print(invitationText)
-            val resultKey = getString()
+            val resultKey = getString().lowercase()
             if (resultKey.isNotBlank()) {
                 if (cipherFactory.verificationKey(resultKey)) {
                     key = resultKey
